@@ -1,0 +1,6 @@
+# Write it!
+
+WaitFor/ConditionMet:
+  Description: 'TODO: Write a description of the cop.'
+  Enabled: pending
+  VersionAdded: '<<next>>'

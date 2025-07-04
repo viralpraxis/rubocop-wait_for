@@ -1,0 +1,21 @@
+plugins:
+  - rubocop-internal_affairs
+  - rubocop-packaging
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-wait_for
+
+AllCops:
+  NewCops: enable
+
+Naming/FileName:
+  Exclude:
+    - lib/rubocop-wait_for.rb
+
+Style/FormatStringToken:
+  Exclude:
+    - spec/**/*
+
+WaitFor/ConditionMet:
+  Exclude:
+    - lib/rubocop/cop/wait_for/condition_met.rb
