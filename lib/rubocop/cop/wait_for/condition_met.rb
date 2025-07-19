@@ -24,7 +24,7 @@ module RuboCop
         DIRECTIVE_PATTERN = /#\s*(?:rubocop[:\-])?wait-for\s+(.+)/.freeze
         private_constant(*constants(false))
 
-        MSG = 'condition has been met.'
+        MSG = 'Condition has been met.'
 
         def external_dependency_checksum
           Time.now.to_i.to_s if ENV['RUBOCOP_WAIT_FOR_CHECK_ALL'] == '1'
