@@ -13,21 +13,21 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
       it 'registers an offense when condition holds' do
         expect_offense(<<~RUBY, directive: directive)
           # %{directive} RUBY_VERSION >= '3.2.'
-          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^ condition has been met.
+          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
         RUBY
       end
 
       it 'registers an offense condition holds with extra spaces before an condition' do
         expect_offense(<<~RUBY, directive: directive)
           # %{directive}   RUBY_VERSION >= '3.2.'
-          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^ condition has been met.
+          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
         RUBY
       end
 
       it 'registers an offense condition holds with extra spaces after an condition' do
         expect_offense(<<~RUBY, directive: directive)
           # %{directive} RUBY_VERSION >= '3.2.'#{'   '}
-          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^^ condition has been met.
+          ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
         RUBY
       end
 
