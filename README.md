@@ -58,7 +58,7 @@ end
 some_code_to_remove_once_ruby34_is_in_use()
 ```
 
-> **Note**
+> [!NOTE]
 >
 > Use can alias use an alias `rubocop-wait-for <code>`
 
@@ -72,8 +72,7 @@ This enables workflows like:
 
 - Monitoring environment-specific conditions in CI pipelines.
 
-> **Warning**
->
+> [!WARNING]
 > All the code found after the directive is passed directly to `Kernel.eval`. Use with caution.
 
 ### Caveats
