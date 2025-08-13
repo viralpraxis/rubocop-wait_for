@@ -60,7 +60,7 @@ some_code_to_remove_once_ruby34_is_in_use()
 
 > [!NOTE]
 >
-> Use can alias use an alias `rubocop-wait-for <code>`
+> Use can use an alias `# rubocop-wait-for <code>`
 
 If the condition inside the comment evaluates to `true` at the time of linting, RuboCop registers an offense.
 
@@ -93,7 +93,6 @@ You can also use multiple version requirements:
 # wait-for gem-version rails '>= 8.1' '< 8.4'
 ```
 
-
 ### Caveats
 
 1. Missing dependencies
@@ -101,7 +100,7 @@ You can also use multiple version requirements:
    RuboCop does not automatically load project dependencies from your `Gemfile.lock`. If your condition relies on gems like Rails, you may need to require them manually:
 
    ```ruby
-   # wait for require 'rails'; defined?(::Rails.some_new_feature) != nil
+   # wait-for require 'rails'; defined?(::Rails.some_new_feature) != nil
    some_code_to_remove_once_new_rails_feature_is_available()
    ```
 
