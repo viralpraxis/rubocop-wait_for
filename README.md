@@ -75,6 +75,25 @@ This enables workflows like:
 > [!WARNING]
 > All the code found after the directive is passed directly to `Kernel.eval`. Use with caution.
 
+Another situation this cop might be useful in is checking gem version.
+
+You can achieve it by using a special form of the magic comment:
+
+```ruby
+# wait-for gem-version rails '>= 8.1'
+```
+
+This condition evaluates to `true` when the detected Rails version is at least `8.1`.
+
+Note that gem versions are determined statically using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions).
+
+You can also use multiple version requirements:
+
+```ruby
+# wait-for gem-version rails '>= 8.1' '< 8.4'
+```
+
+
 ### Caveats
 
 1. Missing dependencies
@@ -82,8 +101,8 @@ This enables workflows like:
    RuboCop does not automatically load project dependencies from your `Gemfile.lock`. If your condition relies on gems like Rails, you may need to require them manually:
 
    ```ruby
-   # wait-for require 'rails/gem_version'; Rails.gem_version >= Gem::Version.new('9.0.0')
-   some_code_to_remove_once_rails90_is_in_use()
+   # wait for require 'rails'; defined?(::Rails.some_new_feature) != nil
+   some_code_to_remove_once_new_rails_feature_is_available()
    ```
 
 2. Caching
