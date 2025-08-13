@@ -52,6 +52,39 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
           .with(/RuboCop::Cop::WaitFor::ConditionMet: Encountered exception during evaluating condition/)
           .once
       end
+
+      context 'with gem version condition' do
+        before do
+          allow(config).to receive(:gem_versions_in_target)
+            .and_return({ 'rails' => Gem::Version.new('3.4') })
+        end
+
+        it 'registers an offense when condition holds' do
+          expect_offense(<<~RUBY, directive: directive)
+            # %{directive} gem-version rails '>= 3.2'
+            ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
+          RUBY
+        end
+
+        it 'does not register an offense when condition does not hold' do
+          expect_no_offenses(<<~RUBY)
+            # %{directive} gem-version rails '>= 3.5'
+          RUBY
+        end
+
+        it 'registers an offense when complex condition holds' do
+          expect_offense(<<~RUBY, directive: directive)
+            # %{directive} gem-version rails '>= 3.2' '< 3.6'
+            ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
+          RUBY
+        end
+
+        it 'does not register an offense when complex condition does not hold' do
+          expect_no_offenses(<<~RUBY)
+            # %{directive} gem-version rails '>= 3.0' '< 3.4'
+          RUBY
+        end
+      end
     end
   end
 

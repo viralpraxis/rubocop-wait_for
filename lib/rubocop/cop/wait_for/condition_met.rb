@@ -45,11 +45,38 @@ module RuboCop
         private
 
         def evaluate_condition(condition)
-          Kernel.eval(condition) # rubocop:disable Security/Eval
-        rescue Exception => e # rubocop:disable Lint/RescueException
-          Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
+          if (gem_condition = gem_version_condition(condition))
+            gem_version_requirement_met?(gem_condition)
+          else
+            begin
+              Kernel.eval(condition) # rubocop:disable Security/Eval
+            rescue Exception => e # rubocop:disable Lint/RescueException
+              Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
 
-          false
+              false
+            end
+          end
+        end
+
+        def gem_version_condition(condition)
+          unless (match_data = /\Agem-version\s+([a-zA-Z0-9_-]+)\s+((?:['"][^'"]+['"]\s*)+)\z/i.match(condition.strip))
+            return
+          end
+
+          {
+            gem_name: match_data[1],
+            requirements: Gem::Requirement.new(match_data[2].scan(/['"]([^'"]+)['"]/).flatten)
+          }
+        end
+
+        def gem_version_requirement_met?(gem_version_requirement)
+          all_gem_versions_in_target = @config.gem_versions_in_target
+          return false unless all_gem_versions_in_target
+
+          gem_version_in_target = all_gem_versions_in_target[gem_version_requirement.fetch(:gem_name)]
+          return false unless gem_version_in_target
+
+          gem_version_requirement.fetch(:requirements).satisfied_by?(gem_version_in_target)
         end
       end
     end
