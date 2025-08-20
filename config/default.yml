@@ -1,6 +1,4 @@
-# Write it!
-
 WaitFor/ConditionMet:
-  Description: 'TODO: Write a description of the cop.'
-  Enabled: pending
-  VersionAdded: '<<next>>'
+  Description: 'Checking if a condition evaluates to true.'
+  Enabled: true
+  VersionAdded: '0.1'
