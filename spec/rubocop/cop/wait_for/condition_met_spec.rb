@@ -85,6 +85,46 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
           RUBY
         end
       end
+
+      context 'with Ruby version condition' do
+        before do
+          allow(config).to receive(:target_ruby_version)
+            .and_return(Gem::Version.new('3.4.5'))
+        end
+
+        it 'registers an offense when condition holds' do
+          expect_offense(<<~RUBY, directive: directive)
+            # %{directive} ruby-version '>= 3.4'
+            ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
+          RUBY
+        end
+
+        it 'registers an offense when condition using only major version holds' do
+          expect_offense(<<~RUBY, directive: directive)
+            # %{directive} ruby-version '>= 3'
+            ^^^{directive}^^^^^^^^^^^^^^^^^^^^ Condition has been met.
+          RUBY
+        end
+
+        it 'does not register an offense when condition does not hold' do
+          expect_no_offenses(<<~RUBY)
+            # %{directive} ruby-version '>= 3.5'
+          RUBY
+        end
+
+        it 'registers an offense when complex condition holds' do
+          expect_offense(<<~RUBY, directive: directive)
+            # %{directive} ruby-version '>= 3.4' '< 3.6'
+            ^^^{directive}^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Condition has been met.
+          RUBY
+        end
+
+        it 'does not register an offense when complex condition does not hold' do
+          expect_no_offenses(<<~RUBY)
+            # %{directive} ruby-version '>= 3.5' '< 3.6'
+          RUBY
+        end
+      end
     end
   end
 

@@ -44,9 +44,11 @@ module RuboCop
 
         private
 
-        def evaluate_condition(condition)
+        def evaluate_condition(condition) # rubocop:disable Metrics/MethodLength
           if (gem_condition = gem_version_condition(condition))
             gem_version_requirement_met?(gem_condition)
+          elsif (ruby_condition = ruby_version_condition(condition))
+            ruby_version_requirement_met?(ruby_condition)
           else
             begin
               Kernel.eval(condition) # rubocop:disable Security/Eval
@@ -77,6 +79,24 @@ module RuboCop
           return false unless gem_version_in_target
 
           gem_version_requirement.fetch(:requirements).satisfied_by?(gem_version_in_target)
+        end
+
+        def ruby_version_condition(condition)
+          unless (match_data = /\Aruby-version\s+((?:['"][^'"]+['"]\s*)+)\z/i.match(condition.strip))
+            return
+          end
+
+          {
+            requirements: Gem::Requirement.new(
+              match_data[1].scan(/['"]([^'"]+)['"]/).flatten
+            )
+          }
+        end
+
+        def ruby_version_requirement_met?(ruby_version_requirement)
+          ruby_version_requirement
+            .fetch(:requirements)
+            .satisfied_by?(Gem::Version.new(RUBY_VERSION))
         end
       end
     end
