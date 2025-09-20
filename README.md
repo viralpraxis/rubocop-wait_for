@@ -85,12 +85,19 @@ You can achieve it by using a special form of the magic comment:
 
 This condition evaluates to `true` when the detected Rails version is at least `8.1`.
 
+Also, you can do the same with Ruby version using the `ruby-version` syntax:
+
+```ruby
+# wait-for ruby-version '> 3.4'
+```
+
 Note that gem versions are determined statically using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions).
 
 You can also use multiple version requirements:
 
 ```ruby
 # wait-for gem-version rails '>= 8.1' '< 8.4'
+# wait-for ruby-version '>= 3.4' '< 3.4.6'
 ```
 
 ### Caveats
