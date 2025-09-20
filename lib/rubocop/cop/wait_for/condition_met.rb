@@ -21,7 +21,7 @@ module RuboCop
       #   # wait-for Gem::Version.new(RUBY_VERSION) >= '3.4.0'
       #   some_code_to_update_upon_upgrading_to_ruby34
       class ConditionMet < Base
-        DIRECTIVE_PATTERN = /#\s*(?:rubocop[:\-])?wait-for\s+(.+)/.freeze
+        DIRECTIVE_PATTERN = /#\s*(?:rubocop[:-])?wait-for\s+(.+)/.freeze
         private_constant(*constants(false))
 
         MSG = 'Condition has been met.'
