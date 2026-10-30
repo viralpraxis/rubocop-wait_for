@@ -113,7 +113,7 @@ You can also use multiple version requirements:
 
 2. Caching
 
-   Since `rubocop-wait_for` depends on RuboCop’s caching mechanism, offenses might not be reported until the cache is invalidated — for instance for dynamic conditions like time-based checks.
+   Since `rubocop-wait_for` depends on RuboCop’s caching mechanism, offenses for conditions passed to `Kernel.eval` might not be reported until the cache is invalidated — for instance for dynamic conditions like time-based checks. `gem-version` and `ruby-version` conditions are not affected: the cache is invalidated whenever the gem versions in the lockfile or `TargetRubyVersion` change.
 
    You can force cache invalidation by passing `RUBOCOP_WAIT_FOR_CHECK_ALL=1` environment variable:
 
