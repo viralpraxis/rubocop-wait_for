@@ -37,6 +37,28 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
         RUBY
       end
 
+      it 'registers an offense in a trailing comment' do
+        expect_offense(<<~RUBY, directive: directive)
+          foo # %{directive} true
+              ^^^{directive}^^^^^ Condition has been met.
+        RUBY
+      end
+
+      it 'does not register an offense for a directive quoted inside another comment' do
+        expect_no_offenses(<<~RUBY)
+          # Usage example:
+          #   # #{directive} true
+        RUBY
+      end
+
+      it 'does not register an offense for a directive inside a block comment' do
+        expect_no_offenses(<<~RUBY)
+          =begin
+          # #{directive} true
+          =end
+        RUBY
+      end
+
       it 'does not register an offense without an conditiong' do
         expect_no_offenses(<<~RUBY)
           # #{directive}

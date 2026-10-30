@@ -64,6 +64,8 @@ some_code_to_remove_once_ruby34_is_in_use()
 
 If the condition inside the comment evaluates to `true` at the time of linting, RuboCop registers an offense.
 
+The directive has to start the comment: directives quoted inside other comments, such as usage examples in documentation, are ignored.
+
 This enables workflows like:
 
 - Automatically flagging feature-flagged code once the feature is launched.
