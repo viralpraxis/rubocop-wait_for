@@ -96,7 +96,7 @@ module RuboCop
         def ruby_version_requirement_met?(ruby_version_requirement)
           ruby_version_requirement
             .fetch(:requirements)
-            .satisfied_by?(Gem::Version.new(RUBY_VERSION))
+            .satisfied_by?(Gem::Version.new(@config.target_ruby_version.to_s))
         end
       end
     end

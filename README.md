@@ -91,13 +91,13 @@ Also, you can do the same with Ruby version using the `ruby-version` syntax:
 # wait-for ruby-version '> 3.4'
 ```
 
-Note that gem versions are determined statically using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions).
+Note that versions are determined statically: gem versions using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions), and the Ruby version from the configured or detected [`TargetRubyVersion`](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version), not the Ruby running RuboCop. `TargetRubyVersion` only has major and minor components, so patch-level requirements are not meaningful.
 
 You can also use multiple version requirements:
 
 ```ruby
 # wait-for gem-version rails '>= 8.1' '< 8.4'
-# wait-for ruby-version '>= 3.4' '< 3.4.6'
+# wait-for ruby-version '>= 3.4' '< 4.0'
 ```
 
 ### Caveats

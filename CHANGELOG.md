@@ -1,6 +1,6 @@
 ## [Unreleased]
 
-- Add support for `# wait-for ruby-version <version-specification>` syntax to check Ruby version statically.
+- Add support for `# wait-for ruby-version <version-specification>` syntax to check `TargetRubyVersion` statically.
 
 ## [0.2.1] - 2025:08-20
 
