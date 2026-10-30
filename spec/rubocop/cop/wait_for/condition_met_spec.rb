@@ -68,7 +68,7 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
 
         it 'does not register an offense when condition does not hold' do
           expect_no_offenses(<<~RUBY)
-            # %{directive} gem-version rails '>= 3.5'
+            # #{directive} gem-version rails '>= 3.5'
           RUBY
         end
 
@@ -81,7 +81,7 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
 
         it 'does not register an offense when complex condition does not hold' do
           expect_no_offenses(<<~RUBY)
-            # %{directive} gem-version rails '>= 3.0' '< 3.4'
+            # #{directive} gem-version rails '>= 3.0' '< 3.4'
           RUBY
         end
       end
@@ -108,7 +108,7 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
 
         it 'does not register an offense when condition does not hold' do
           expect_no_offenses(<<~RUBY)
-            # %{directive} ruby-version '>= 3.5'
+            # #{directive} ruby-version '>= 3.5'
           RUBY
         end
 
@@ -121,7 +121,7 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
 
         it 'does not register an offense when complex condition does not hold' do
           expect_no_offenses(<<~RUBY)
-            # %{directive} ruby-version '>= 3.5' '< 3.6'
+            # #{directive} ruby-version '>= 3.5' '< 3.6'
           RUBY
         end
       end
