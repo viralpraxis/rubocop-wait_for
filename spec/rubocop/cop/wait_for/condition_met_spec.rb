@@ -84,6 +84,16 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
             # #{directive} gem-version rails '>= 3.0' '< 3.4'
           RUBY
         end
+
+        it 'does not register an offense with malformed requirement' do
+          expect_no_offenses(<<~RUBY)
+            # #{directive} gem-version rails 'not a version'
+          RUBY
+
+          expect(Kernel).to have_received(:warn)
+            .with(/Encountered exception during evaluating condition: Illformed requirement/)
+            .once
+        end
       end
 
       context 'with Ruby version condition' do
@@ -128,6 +138,16 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
           expect_no_offenses(<<~RUBY)
             # #{directive} ruby-version '>= 4.0'
           RUBY
+        end
+
+        it 'does not register an offense with malformed requirement' do
+          expect_no_offenses(<<~RUBY)
+            # #{directive} ruby-version '>= 3.4' 'not a version'
+          RUBY
+
+          expect(Kernel).to have_received(:warn)
+            .with(/Encountered exception during evaluating condition: Illformed requirement/)
+            .once
         end
       end
     end

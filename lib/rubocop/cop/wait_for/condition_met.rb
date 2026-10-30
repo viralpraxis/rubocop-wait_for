@@ -44,20 +44,18 @@ module RuboCop
 
         private
 
-        def evaluate_condition(condition) # rubocop:disable Metrics/MethodLength
+        def evaluate_condition(condition)
           if (gem_condition = gem_version_condition(condition))
             gem_version_requirement_met?(gem_condition)
           elsif (ruby_condition = ruby_version_condition(condition))
             ruby_version_requirement_met?(ruby_condition)
           else
-            begin
-              Kernel.eval(condition) # rubocop:disable Security/Eval
-            rescue Exception => e # rubocop:disable Lint/RescueException
-              Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
-
-              false
-            end
+            Kernel.eval(condition) # rubocop:disable Security/Eval
           end
+        rescue Exception => e # rubocop:disable Lint/RescueException
+          Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
+
+          false
         end
 
         def gem_version_condition(condition)
