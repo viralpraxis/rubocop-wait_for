@@ -154,7 +154,10 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
   end
 
   describe '#external_dependency_checksum' do
-    subject(:checksum) { described_class.new.external_dependency_checksum }
+    subject(:checksum) { cop.external_dependency_checksum }
+
+    let(:gem_versions) { { 'rails' => '8.0.0' } }
+    let(:ruby_version) { 3.4 }
 
     before { allow(Time).to receive(:now).and_return(Time.parse('2025-07-04 22:02:53.141065464 +0400')) }
 
@@ -173,18 +176,32 @@ RSpec.describe RuboCop::Cop::WaitFor::ConditionMet, :config do
       it { expect(checksum).to eq(Time.now.to_i.to_s) }
     end
 
+    shared_examples 'a checksum of the target versions' do
+      it 'is stable across cop instances' do
+        expect(checksum).to eq(described_class.new(config).external_dependency_checksum)
+      end
+
+      it 'changes when a gem version in the target changes' do
+        expect { allow(config).to receive(:gem_versions_in_target).and_return({ 'rails' => Gem::Version.new('8.1.0') }) }
+          .to change(cop, :external_dependency_checksum)
+      end
+
+      it 'changes when the target Ruby version changes' do
+        expect { allow(config).to receive(:target_ruby_version).and_return(3.5) }
+          .to change(cop, :external_dependency_checksum)
+      end
+    end
+
     context 'when `RUBOCOP_WAIT_FOR_CHECK_ALL` is set to `"0"`' do
       let(:variable_value) { '0' }
 
-      it { expect(checksum).to be_nil }
+      it_behaves_like 'a checksum of the target versions'
     end
 
-    context 'when `RUBOCOP_WAIT_FOR_CHECK_ALL` is not set to `"0"`' do
-      let(:variable_value) { '0' }
+    context 'when `RUBOCOP_WAIT_FOR_CHECK_ALL` is not set' do
+      let(:variable_value) { nil }
 
-      before { ENV.delete('RUBOCOP_WAIT_FOR_CHECK_ALL') }
-
-      it { expect(checksum).to be_nil }
+      it_behaves_like 'a checksum of the target versions'
     end
   end
 end

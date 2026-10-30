@@ -27,7 +27,9 @@ module RuboCop
         MSG = 'Condition has been met.'
 
         def external_dependency_checksum
-          Time.now.to_i.to_s if ENV['RUBOCOP_WAIT_FOR_CHECK_ALL'] == '1'
+          return Time.now.to_i.to_s if ENV['RUBOCOP_WAIT_FOR_CHECK_ALL'] == '1'
+
+          Digest::SHA1.hexdigest([@config.gem_versions_in_target, @config.target_ruby_version].inspect)
         end
 
         def on_new_investigation
