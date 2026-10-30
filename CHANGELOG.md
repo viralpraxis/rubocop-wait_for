@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - Add support for `# wait-for ruby-version <version-specification>` syntax to check `TargetRubyVersion` statically.
+- Fix an error when a `gem-version` or `ruby-version` directive contains a malformed requirement. Such directives now emit a warning instead.
 
 ## [0.2.1] - 2025:08-20
 
