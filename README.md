@@ -64,6 +64,8 @@ some_code_to_remove_once_ruby34_is_in_use()
 
 If the condition inside the comment evaluates to `true` at the time of linting, RuboCop registers an offense.
 
+The directive has to start the comment: directives quoted inside other comments, such as usage examples in documentation, are ignored.
+
 This enables workflows like:
 
 - Automatically flagging feature-flagged code once the feature is launched.
@@ -91,13 +93,13 @@ Also, you can do the same with Ruby version using the `ruby-version` syntax:
 # wait-for ruby-version '> 3.4'
 ```
 
-Note that gem versions are determined statically using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions).
+Note that versions are determined statically: gem versions using RuboCop’s [built-in feature](https://docs.rubocop.org/rubocop/development.html#limit-by-ruby-or-gem-versions), and the Ruby version from the configured or detected [`TargetRubyVersion`](https://docs.rubocop.org/rubocop/configuration.html#setting-the-target-ruby-version), not the Ruby running RuboCop. `TargetRubyVersion` only has major and minor components, so patch-level requirements are not meaningful.
 
 You can also use multiple version requirements:
 
 ```ruby
 # wait-for gem-version rails '>= 8.1' '< 8.4'
-# wait-for ruby-version '>= 3.4' '< 3.4.6'
+# wait-for ruby-version '>= 3.4' '< 4.0'
 ```
 
 ### Caveats
@@ -113,7 +115,7 @@ You can also use multiple version requirements:
 
 2. Caching
 
-   Since `rubocop-wait_for` depends on RuboCop’s caching mechanism, offenses might not be reported until the cache is invalidated — for instance for dynamic conditions like time-based checks.
+   Since `rubocop-wait_for` depends on RuboCop’s caching mechanism, offenses for conditions passed to `Kernel.eval` might not be reported until the cache is invalidated — for instance for dynamic conditions like time-based checks. `gem-version` and `ruby-version` conditions are not affected: the cache is invalidated whenever the gem versions in the lockfile or `TargetRubyVersion` change.
 
    You can force cache invalidation by passing `RUBOCOP_WAIT_FOR_CHECK_ALL=1` environment variable:
 

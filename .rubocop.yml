@@ -15,7 +15,3 @@ Naming/FileName:
 Style/FormatStringToken:
   Exclude:
     - spec/**/*
-
-WaitFor/ConditionMet:
-  Exclude:
-    - lib/rubocop/cop/wait_for/condition_met.rb

@@ -21,13 +21,15 @@ module RuboCop
       #   # wait-for Gem::Version.new(RUBY_VERSION) >= '3.4.0'
       #   some_code_to_update_upon_upgrading_to_ruby34
       class ConditionMet < Base
-        DIRECTIVE_PATTERN = /#\s*(?:rubocop[:-])?wait-for\s+(.+)/.freeze
+        DIRECTIVE_PATTERN = /\A#\s*(?:rubocop[:-])?wait-for\s+(.+)/.freeze
         private_constant(*constants(false))
 
         MSG = 'Condition has been met.'
 
         def external_dependency_checksum
-          Time.now.to_i.to_s if ENV['RUBOCOP_WAIT_FOR_CHECK_ALL'] == '1'
+          return Time.now.to_i.to_s if ENV['RUBOCOP_WAIT_FOR_CHECK_ALL'] == '1'
+
+          Digest::SHA1.hexdigest([@config.gem_versions_in_target, @config.target_ruby_version].inspect)
         end
 
         def on_new_investigation
@@ -44,20 +46,18 @@ module RuboCop
 
         private
 
-        def evaluate_condition(condition) # rubocop:disable Metrics/MethodLength
+        def evaluate_condition(condition)
           if (gem_condition = gem_version_condition(condition))
             gem_version_requirement_met?(gem_condition)
           elsif (ruby_condition = ruby_version_condition(condition))
             ruby_version_requirement_met?(ruby_condition)
           else
-            begin
-              Kernel.eval(condition) # rubocop:disable Security/Eval
-            rescue Exception => e # rubocop:disable Lint/RescueException
-              Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
-
-              false
-            end
+            Kernel.eval(condition) # rubocop:disable Security/Eval
           end
+        rescue Exception => e # rubocop:disable Lint/RescueException
+          Kernel.warn "#{self.class.name}: Encountered exception during evaluating condition: #{e.message}"
+
+          false
         end
 
         def gem_version_condition(condition)
@@ -96,7 +96,7 @@ module RuboCop
         def ruby_version_requirement_met?(ruby_version_requirement)
           ruby_version_requirement
             .fetch(:requirements)
-            .satisfied_by?(Gem::Version.new(RUBY_VERSION))
+            .satisfied_by?(Gem::Version.new(@config.target_ruby_version.to_s))
         end
       end
     end
